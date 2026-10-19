@@ -343,14 +343,15 @@ a.navbar-brand {
   left: 0;
   right: 0;
   height: 500px;
-  background-image: url(../img);
+  /* Imagem de fundo não definida: referência anterior gerava 404. */
+  /* background-image: url(../img); */
 }
 
 .card-depoimentos {
   height: 390px;
   width: 390px;
   border-radius: 120px;
-  background-color: var(--color-secondary);
+  background-color: #ffe8a3;
   position: absolute;
   left: 0;
 }

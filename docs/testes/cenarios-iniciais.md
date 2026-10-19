@@ -16,7 +16,7 @@ tests/
     └── known-issues.js
 ```
 
-**Estado da implementação:** CT-001 a CT-005 estão automatizados em Playwright Test. Nenhum defeito da aplicação foi corrigido.
+**Estado da implementação:** CT-001 a CT-005 estão automatizados em Playwright Test. BUG-003 foi corrigido no código local; a versão publicada ainda não contém a correção.
 
 **Estado da execução:** registrar abaixo somente resultados de execuções efetivamente realizadas. A suíte usa Chromium e, por padrão, `https://menu-online-project.vercel.app/`; `BASE_URL` pode substituir o destino. CT-001 e CT-005 não interagem com o carrinho nem concluem pedidos.
 
@@ -26,7 +26,11 @@ tests/
 
 **Execução automatizada pós-correção local (14/10/2026):** suíte completa executada com `BASE_URL=http://127.0.0.1:8765/`: 3 testes passaram (CT-001, CT-002, CT-005) e 2 falharam (CT-003, CT-004). CT-002 confirmou carregamento local das duas fontes. CT-003/CT-004 falharam apenas pelo BUG-003 (`/img`); nenhum 404 novo foi encontrado. A suíte retorna código diferente de zero enquanto BUG-003 continuar impedindo o critério de aceitação.
 
-**Linha de base e defeitos:** `tests/support/known-issues.js` continua identificando os três defeitos originais. BUG-001/002 foram corrigidos e validados localmente, mas permanecem na lista até validação da versão publicada. Os testes anexam observações de rede ao relatório e não convertem falhas de aceitação em aprovação. Nenhuma falha 404 nova foi encontrada na execução local.
+**Execução automatizada após a correção do BUG-003 (19/10/2026):** `npm.cmd test` com `BASE_URL=http://127.0.0.1:8765/` no preview local: 5 passaram (CT-001 a CT-005), 0 falharam. CT-003 confirmou que o CSS computado não define imagem de fundo, que `/img` não foi solicitado, que o card mantém 390 × 390 px, raio de 120 px, posição absoluta à esquerda e cor `#ffe8a3`, e que `pizzas.png` carregou (`naturalWidth > 0`, resposta HTTP abaixo de 400). CT-004 não observou 404. Na primeira tentativa, CT-003 falhou por exigir visibilidade da imagem animada/responsiva; o critério foi ajustado para verificar carregamento, e a repetição da suíte completa passou.
+
+**Verificação publicada (19/10/2026):** inspeção exploratória com Playwright MCP, separada dos testes automatizados, ainda encontrou `/img` e as duas URLs antigas de fontes respondendo 404. `pizzas.png` respondeu 200 e carregou. Nenhuma correção é considerada confirmada em produção.
+
+**Linha de base e defeitos:** `tests/support/known-issues.js` identifica as três URLs da linha de base histórica para diagnóstico. CT-004 classifica separadamente 404 históricos e novos, e reprova ambos; assim, a classificação não isenta uma regressão de um recurso já corrigido. A execução local de 19/10 não encontrou 404.
 
 ## Escopo e ambiente
 
@@ -70,23 +74,23 @@ tests/
 
 - **Arquivo:** `tests/02-static-resources/testimonial-background.spec.js`.
 - **Estado da implementação:** Implementado como teste de aceitação.
-- **Estado da execução automatizada:** FAIL antes e depois das correções locais; o ambiente pós-correção `http://127.0.0.1:8765/` requisitou `/img` e recebeu 404.
+- **Estado da execução automatizada:** PASS na suíte local de 19/10/2026 após a correção; a linha de base de 14/10 havia falhado porque `/img` retornava 404.
 - **Pré-condições:** Página inicial e `css/main.css` carregados; rede disponível.
 - **Passos:**
   1. Abrir a página inicial.
-  2. Registrar a requisição de imagem iniciada pela regra `.background-depoimentos`.
-  3. Inspecionar a URL computada e a exibição visual da seção.
-  4. Repetir após eventual correção publicada.
-- **Resultado esperado antes da correção:** Registrar o comportamento atual e o recurso requisitado.
-- **Resultado esperado depois da correção:** A imagem escolhida para a seção responde com sucesso e aparece no fundo, sem 404.
-- **Evidência:** O relatório HTML inclui `ct-003-background-baseline.json` com URL computada e resposta HTTP. O teste não presume qual arquivo deveria ser usado.
-- **Limitação:** A imagem de fundo pretendida não foi identificada. BUG-003 permanece aberto.
+  2. Confirmar que o estilo computado não define imagem de fundo e que não há requisição para `/img`.
+  3. Conferir dimensões, raio, cor e posicionamento do card decorativo.
+  4. Confirmar a resposta da requisição e o carregamento (`naturalWidth > 0`) de `./img/pizzas.png`.
+- **Resultado esperado:** Nenhuma requisição para `/img`; o card mede 390 × 390 px, tem raio de 120 px, cor `#ffe8a3`, posição absoluta à esquerda; `pizzas.png` carrega sem erro.
+- **Evidência:** `ct-003-background-baseline.json` registra estilo computado, estilo do card, requisições inválidas, URL/status da pizza e `naturalWidth`.
+- **Resultado local (19/10/2026):** PASS. A imagem não precisa estar visível no viewport para comprovar o carregamento; classes responsivas e animações podem ocultá-la até a seção entrar em foco.
+- **Limitação:** A versão publicada ainda requisita `/img` e não recebeu a correção.
 
 ## CT-004 — Ausência de 404 para recursos esperados
 
 - **Arquivo:** `tests/03-network/unexpected-404.spec.js`.
 - **Estado da implementação:** Implementado como teste de aceitação e classificador da linha de base.
-- **Estado da execução:** FAIL na linha de base publicada com os três 404 conhecidos. Após correção local, FAIL somente pelo `/img` (BUG-003); a verificação separada de 404 não documentados passou e nenhum erro novo foi observado.
+- **Estado da execução:** PASS local em 19/10/2026, sem respostas 404. A linha de base publicada de 14/10 falhou com três 404; a inspeção publicada de 19/10 ainda confirmou os defeitos de fontes e `/img` antes de implantação.
 - **Pré-condições:** Lista de recursos esperados definida para a página inicial; navegador com registro de rede limpo ou identificável por navegação.
 - **Passos:**
   1. Carregar a página inicial.
@@ -95,7 +99,7 @@ tests/
   4. Repetir após eventual correção publicada.
 - **Resultado esperado antes da correção:** Identificar e documentar as falhas existentes sem classificá-las como resolvidas.
 - **Resultado esperado depois da correção:** Nenhuma requisição de recurso esperado retorna `404`; demais recursos são avaliados conforme o status esperado para cada tipo.
-- **Evidência:** O relatório HTML inclui `ct-004-network-baseline.json`, com as respostas HTTP, classificação dos 404 conhecidos e lista de 404 inesperados. O coletor usa um único evento de resposta e deduplica por objeto de requisição.
+- **Evidência:** O relatório HTML inclui `ct-004-network-baseline.json`, com respostas HTTP, classificação dos 404 históricos e lista de 404 não documentados. A aprovação exige que ambas as listas e o conjunto total de respostas 404 estejam vazios; o coletor deduplica por objeto de requisição.
 - **Limitação:** A coleta cobre as respostas observadas durante o carregamento da página inicial no ambiente indicado por `BASE_URL`.
 
 ## CT-005 — Preservação da exibição dos produtos
