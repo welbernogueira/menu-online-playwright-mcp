@@ -24,7 +24,7 @@ flowchart TD
     N --> O[Zerar seletor e atualizar badge]
 ~~~
 
-**Evidência observada:** a página tem seis categorias. Cada uma foi selecionada e exibiu oito produtos. Em Pizzas, “Ver mais” acrescentou quatro itens e desapareceu. O filtro selecionado ficou ativo e a troca de categoria voltou a oito itens. Fontes: index.html:192-237; js/app.js:23-60; js/dados.js. Navegação entre as seções é feita por âncoras em index.html:46-55.
+**Evidência observada:** a página tem seis categorias. Cada uma foi selecionada e exibiu oito produtos. Em Pizzas, “Ver mais” acrescentou quatro itens e desapareceu. O filtro selecionado ficou ativo e a troca de categoria voltou a oito itens. Fontes: app/index.html:192-237; app/js/app.js:23-60; app/js/dados.js. Navegação entre as seções é feita por âncoras em app/index.html:46-55.
 
 ## Fluxo de carrinho, endereço e revisão
 
@@ -54,7 +54,7 @@ flowchart TD
 
 **Evidência observada:** abrir o carrinho vazio mostrou a mensagem “Seu carrinho está vazio!” e não avançou. Um único produto adicionado localmente exibiu badge 1 e, ao abrir o carrinho, subtotal de R$ 99,00, entrega de R$ 5,00 e total de R$ 104,00. Depois, foram preenchidos CEP 00000000, Rua de Teste QA, Centro QA, número 1 e Cidade QA; sem escolher UF, o resumo abriu. Esses são dados sintéticos, usados apenas no estado temporário do navegador.
 
-**Regra divergente confirmada:** o campo UF permanece no placeholder com valor -1, mas resumoPedido verifica apenas se o texto da opção está vazio. -1 tem comprimento diferente de zero. Isso permitiu a etapa de resumo com a UF inválida. Evidências: index.html:487-517; js/app.js:352-412.
+**Regra divergente confirmada:** o campo UF permanece no placeholder com valor -1, mas resumoPedido verifica apenas se o texto da opção está vazio. -1 tem comprimento diferente de zero. Isso permitiu a etapa de resumo com a UF inválida. Evidências: app/index.html:487-517; app/js/app.js:352-412.
 
 ## Fluxo de busca de CEP
 
@@ -70,7 +70,7 @@ flowchart LR
     E -. timeout/rede .-> I[Tratamento não identificado no código]
 ~~~
 
-ViaCEP não foi chamado durante a navegação. Portanto, respostas válidas/inválidas, disponibilidade e timeout não foram observados. A ausência de handler de falha é verificada no fonte (js/app.js:314-350), não em uma simulação de falha.
+ViaCEP não foi chamado durante a navegação. Portanto, respostas válidas/inválidas, disponibilidade e timeout não foram observados. A ausência de handler de falha é verificada no fonte (app/js/app.js:314-350), não em uma simulação de falha.
 
 ## Fluxo de depoimentos, reserva e contato
 
@@ -85,7 +85,7 @@ flowchart TD
     J[Botão telefone] --> K[Aplicativo telefônico]
 ~~~
 
-Os depoimentos 2 e 3 foram selecionados com sucesso e atualizaram texto e estado visual. Os links de reserva e telefone não foram acionados; seus destinos foram conferidos apenas no DOM/código (index.html:339-365, js/app.js:473-484).
+Os depoimentos 2 e 3 foram selecionados com sucesso e atualizaram texto e estado visual. Os links de reserva e telefone não foram acionados; seus destinos foram conferidos apenas no DOM/código (app/index.html:339-365, app/js/app.js:473-484).
 
 ## Estados e transições conhecidos
 

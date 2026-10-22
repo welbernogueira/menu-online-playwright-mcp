@@ -20,7 +20,9 @@ tests/
 
 **Estado da execução:** registrar abaixo somente resultados de execuções efetivamente realizadas. A suíte usa Chromium e, por padrão, `https://menu-online-project.vercel.app/`; `BASE_URL` pode substituir o destino. CT-001 e CT-005 não interagem com o carrinho nem concluem pedidos.
 
-**Evidências da suíte:** o relatório HTML é produzido em `playwright-report/`; screenshots e traces de falhas são salvos em `test-results/`.
+**Evidências da suíte:** o relatório HTML é produzido em `qa/reports/latest/playwright-report/`; screenshots e traces de falhas são salvos em `qa/reports/latest/test-results/`.
+
+**Execuções históricas preservadas:** a execução inicial está em `qa/reports/archive/2026-10-19-initial-attempt/playwright-report/`; o relatório da execução local aprovada está em `qa/reports/archive/2026-10-19-post-fix-validation/playwright-report/`.
 
 **Linha de base publicada antes das correções locais (14/10/2026):** 2 testes passaram (CT-001, CT-005) e 3 testes de aceitação falharam (CT-002, CT-003, CT-004) contra o `BASE_URL` padrão. Os três resultados FAIL correspondiam a BUG-001/002/003. CT-004 não identificou 404 fora da linha de base conhecida.
 
@@ -32,10 +34,22 @@ tests/
 
 **Linha de base e defeitos:** `tests/support/known-issues.js` identifica as três URLs da linha de base histórica para diagnóstico. CT-004 classifica separadamente 404 históricos e novos, e reprova ambos; assim, a classificação não isenta uma regressão de um recurso já corrigido. A execução local de 19/10 não encontrou 404.
 
+## Execução completa em 22/10/2026
+
+| Cenário | Veredito | Evidência |
+|---|---|---|
+| CT-001 | PASSOU | [Card HTML](../../qa/reports/2026-10-22-full-suite-local-05/evidence/CT-001.html) · [JPEG](../../qa/reports/2026-10-22-full-suite-local-05/evidence/CT-001.jpg) |
+| CT-002 | PASSOU | [Card HTML](../../qa/reports/2026-10-22-full-suite-local-05/evidence/CT-002.html) · [JPEG](../../qa/reports/2026-10-22-full-suite-local-05/evidence/CT-002.jpg) |
+| CT-003 | PASSOU | [Card HTML](../../qa/reports/2026-10-22-full-suite-local-05/evidence/CT-003.html) · [JPEG](../../qa/reports/2026-10-22-full-suite-local-05/evidence/CT-003.jpg) |
+| CT-004 | PASSOU | [Card HTML](../../qa/reports/2026-10-22-full-suite-local-05/evidence/CT-004.html) · [JPEG](../../qa/reports/2026-10-22-full-suite-local-05/evidence/CT-004.jpg) |
+| CT-005 | PASSOU | [Card HTML](../../qa/reports/2026-10-22-full-suite-local-05/evidence/CT-005.html) · [JPEG](../../qa/reports/2026-10-22-full-suite-local-05/evidence/CT-005.jpg) |
+
+A execução integrou CT-001 a CT-005 à suíte completa local. Os cinco passaram no Chromium. O relatório geral está em [report.html](../../qa/reports/2026-10-22-full-suite-local-05/report.html); não houve validação de produção nesta rodada.
+
 ## Escopo e ambiente
 
 - **Página:** `https://menu-online-project.vercel.app/`
-- **Recursos sob observação:** `css/main.css`, `css/responsivo.css`, fontes Poppins e imagens referenciadas.
+- **Recursos sob observação:** `app/css/main.css`, `app/css/responsivo.css`, fontes Poppins e imagens referenciadas.
 - **Evidências a coletar:** URL completa, método e status HTTP das requisições relevantes; mensagens do console; estado de carregamento das fontes/imagens; captura da exibição da página e dos produtos.
 - **Observação:** comparar execução antes e depois de uma eventual correção. O estado “antes” disponível é o registro exploratório anterior; a execução controlada destes cenários ainda está pendente.
 
@@ -59,7 +73,7 @@ tests/
 - **Arquivo:** `tests/02-static-resources/fonts.spec.js`.
 - **Estado da implementação:** Implementado como teste de aceitação.
 - **Estado da execução:** FAIL na linha de base publicada anterior às correções; PASS em servidor local após correção em 14/10/2026. As duas fontes carregaram localmente.
-- **Pré-condições:** Página inicial e `css/main.css` carregados; rede/console disponíveis.
+- **Pré-condições:** Página inicial e `app/css/main.css` carregados; rede/console disponíveis.
 - **Passos:**
   1. Abrir a página inicial e filtrar as requisições por `Poppins-Regular.otf` e `Poppins-Medium.otf`.
   2. Registrar URL completa, status HTTP e tipo de recurso.
@@ -75,7 +89,7 @@ tests/
 - **Arquivo:** `tests/02-static-resources/testimonial-background.spec.js`.
 - **Estado da implementação:** Implementado como teste de aceitação.
 - **Estado da execução automatizada:** PASS na suíte local de 19/10/2026 após a correção; a linha de base de 14/10 havia falhado porque `/img` retornava 404.
-- **Pré-condições:** Página inicial e `css/main.css` carregados; rede disponível.
+- **Pré-condições:** Página inicial e `app/css/main.css` carregados; rede disponível.
 - **Passos:**
   1. Abrir a página inicial.
   2. Confirmar que o estilo computado não define imagem de fundo e que não há requisição para `/img`.

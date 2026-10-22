@@ -17,7 +17,7 @@ As perguntas abaixo evitam transformar comportamentos atuais do código em regra
 
 ## Catálogo e conteúdo
 
-11. **Os 72 registros de js/dados.js representam o catálogo vigente ou dados demonstrativos?** Muitos nomes correspondem a restaurantes/marcas dos EUA; confirmar produtos, descrições, imagens e disponibilidade.
+11. **Os 72 registros de app/js/dados.js representam o catálogo vigente ou dados demonstrativos?** Muitos nomes correspondem a restaurantes/marcas dos EUA; confirmar produtos, descrições, imagens e disponibilidade.
 12. **Os preços em reais são os valores comerciais corretos?** A suíte não deve fixar a lista atual sem um catálogo aprovado.
 13. **A regra de 8 produtos iniciais e 12 por categoria é intencional?** Confirmar limite, ordem e se Ver mais deve ser ocultado quando faltarem itens.
 14. **Existe outra fonte/catálogo externo ou painel administrativo fora do repositório observado?** Nenhum foi encontrado na árvore/fonte consultada.

@@ -1,6 +1,6 @@
-# Plano de organização futura das suítes — Menu On-Line
+# Plano de organização das suítes — Menu On-Line
 
-**Estado:** proposta de planejamento. Nenhum arquivo de teste foi criado ou alterado nesta etapa.
+**Estado:** organização materializada em `tests/`; execução dos novos cenários ainda pendente. O mapeamento entre suítes, cenários e bloqueios está em [`docs/testes/suites-automatizadas.md`](../testes/suites-automatizadas.md).
 
 ## Princípios de execução
 

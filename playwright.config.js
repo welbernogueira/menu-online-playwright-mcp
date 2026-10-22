@@ -6,9 +6,9 @@ module.exports = defineConfig({
   fullyParallel: true,
   reporter: [
     ['list'],
-    ['html', { outputFolder: 'playwright-report', open: 'never' }],
+    ['html', { outputFolder: 'qa/reports/latest/playwright-report', open: 'never' }],
   ],
-  outputDir: 'test-results',
+  outputDir: 'qa/reports/latest/test-results',
   use: {
     baseURL: process.env.BASE_URL || 'https://menu-online-project.vercel.app/',
     browserName: 'chromium',
