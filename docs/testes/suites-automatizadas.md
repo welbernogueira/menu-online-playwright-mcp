@@ -1,6 +1,6 @@
 # Suítes automatizadas — Menu On-Line
 
-**Estado da execução (2026-10-22-full-suite-local-05):** a suíte completa descobriu 36 CTs; 19 passaram, 0 falharam e 17 ficaram PENDENTE por test.fixme. CT-001 a CT-005 e CT-006 a CT-036 foram incluídos na execução.
+**Estado da execução (full-suite-local-20261024T231124284Z):** 36 cenários executados; 27 passaram, 9 falharam e 0 ficaram pendentes. CTs reprovados: CT-011, CT-019, CT-020, CT-022, CT-029, CT-030, CT-031, CT-032, CT-034. Veja [relatório completo](../../qa/reports/full-suite-local-20261024T231124284Z/report.html).
 
 ## Organização e rastreabilidade
 
@@ -21,27 +21,24 @@
 
 Os testes iniciais CT-001 a CT-005 permanecem em `tests/01-e2e/`, `tests/02-static-resources/` e `tests/03-network/`. A configuração Playwright usa `testDir: ./tests` e procura recursivamente `*.spec.js`; portanto, `npm test` inclui as suítes novas e os cinco casos iniciais.
 
-## Critérios ainda pendentes
+## Critérios de execução
 
-Os casos abaixo estão registrados como `test.fixme` com a pergunta que impede um veredito de aceitação. Eles aparecem como pendentes/bloqueados no relatório e não fazem assertions sobre uma regra presumida:
+Os antigos `test.fixme` foram substituídos por assertions conforme a linha de base de QA em [criterios-padrao-execucao.md](criterios-padrao-execucao.md). Essa linha de base torna os cenários executáveis sem declarar regras comerciais ou decisões de produto como aprovadas. As perguntas de negócio em `docs/auditoria/perguntas-pendentes.md` continuam abertas.
 
-- CT-008: referência aprovada para conteúdo institucional.
-- CT-017: regra da taxa e cálculo de entrega.
-- CT-018 a CT-020: campos obrigatórios, UF e formato de CEP.
-- CT-022: comportamento quando ViaCEP não encontra o CEP ou fica indisponível.
-- CT-023 e CT-024: complemento e preservação do endereço ao voltar.
-- CT-025 e CT-026: destino e conteúdo oficial de pedido, reserva e telefone.
-- CT-029 a CT-034: tolerâncias de viewport, toque, alvo de acessibilidade, navegadores e política de privacidade.
-- CT-036: métrica e orçamento de desempenho.
+### Reexecução e evidências
 
-CT-006, CT-007, CT-009 a CT-016, CT-021, CT-027, CT-028 e CT-035 têm assertions implementadas. A existência de assertions não representa execução ou aprovação.
+- `npm test` executa todos os CTs na cópia local de `app/`, inicia o servidor estático em loopback e grava cada execução em uma pasta própria de `qa/reports/`.
+- O runner salva JSON bruto, relatório nativo, screenshots por cenário, traces em falhas e gera `report.json`, `report.html`, `report.xlsx` e um card HTML por CT. O comando mantém o status diferente de zero quando há assertions reprovadas, depois de salvar os resultados.
+- `npm run test:report` abre o relatório HTML nativo mais recente.
+- Para completar as evidências JPEG obrigatórias, execute `node qa/scripts/serve-report.cjs <executionId>`, capture cada página `/evidence/CT-xxx.html` por Playwright MCP em `evidence/CT-xxx.jpg` e execute `npm run qa:report -- <executionId>` para atualizar os links do relatório e da planilha.
+- Para usar um preview isolado, informe `BASE_URL` explicitamente. A configuração não permite o host conhecido de produção como destino.
+
+**Resultado da execução mais recente:** 36 cenários executados; 27 passaram, 9 falharam e 0 ficaram pendentes. CTs reprovados: CT-011, CT-019, CT-020, CT-022, CT-029, CT-030, CT-031, CT-032, CT-034. O veredito usa a linha de base de QA e não confirma decisões comerciais.
 
 ## Ambiente e artefatos
 
-As suítes de interface exigem BASE_URL explícito e pulam se o alvo for o host de produção conhecido. A execução 2026-10-22-full-suite-local-05 usou a cópia estática local em app/ com BASE_URL=http://127.0.0.1:8765/, Chromium, npm.cmd test e uma configuração por execução em qa/reports/2026-10-22-full-suite-local-05/execution-config.cjs. A configuração oficial do projeto não foi alterada.
+As suítes de interface usam a cópia local de app/ por padrão: npm test inicia um servidor isolado em loopback e grava os artefatos em qa/reports/full-suite-local-20261024T231124284Z/. Um preview alternativo só é usado quando BASE_URL é informado explicitamente; o host de produção é bloqueado.
 
-O Playwright MCP disponível oferece ações de navegador, mas não inicia a suíte Node/Playwright. A suíte completa foi executada pelo Playwright Test CLI como alternativa compatível; o MCP foi usado para navegação exploratória local e para gerar os cards JPEG da execução.
+Artefatos: [relatório visual](../../qa/reports/full-suite-local-20261024T231124284Z/report.html), [report.json](../../qa/reports/full-suite-local-20261024T231124284Z/report.json), [raw.json](../../qa/reports/full-suite-local-20261024T231124284Z/raw.json), [report.xlsx](../../qa/reports/full-suite-local-20261024T231124284Z/report.xlsx), [relatório nativo do Playwright](../../qa/reports/full-suite-local-20261024T231124284Z/playwright-report/index.html) e cards em qa/reports/full-suite-local-20261024T231124284Z/evidence/.
 
-Artefatos: [relatório visual](../../qa/reports/2026-10-22-full-suite-local-05/report.html), [report.json](../../qa/reports/2026-10-22-full-suite-local-05/report.json), [raw.json](../../qa/reports/2026-10-22-full-suite-local-05/raw.json), [report.xlsx](../../qa/reports/2026-10-22-full-suite-local-05/report.xlsx), [relatório nativo do Playwright](../../qa/reports/2026-10-22-full-suite-local-05/playwright-report/index.html) e cards em qa/reports/2026-10-22-full-suite-local-05/evidence/.
-
-CT-001 a CT-005: PASSOU. CT-006, CT-007, CT-009 a CT-016, CT-021, CT-027, CT-028 e CT-035: PASSOU. CT-008, CT-017 a CT-020, CT-022 a CT-026, CT-029 a CT-034 e CT-036: PENDENTE, com motivo registrado em raw.json e nos cards. Os testes PENDENTE não receberam veredito funcional.
+Os cenários aprovados, reprovados e pendentes constam no relatório; nenhum resultado é inferido por ausência de erro. A rodada local não confirma comportamento em produção.

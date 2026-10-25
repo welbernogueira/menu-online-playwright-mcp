@@ -45,8 +45,27 @@ async function openAddressStep(page) {
   await expect(page.locator('#localEntrega')).toBeVisible();
 }
 
-function deferUntilDecision(test, reason) {
-  test.fixme(true, `Pendente de critério aprovado: ${reason}`);
+async function fillAddress(page, overrides = {}) {
+  const address = {
+    cep: '58000000',
+    endereco: 'Rua QA Sintética',
+    bairro: 'Centro QA',
+    numero: '123',
+    cidade: 'Cidade QA',
+    complemento: '',
+    uf: 'PB',
+    ...overrides,
+  };
+
+  await page.locator('#txtCEP').fill(address.cep);
+  await page.locator('#txtEndereco').fill(address.endereco);
+  await page.locator('#txtBairro').fill(address.bairro);
+  await page.locator('#txtNumero').fill(address.numero);
+  await page.locator('#txtCidade').fill(address.cidade);
+  await page.locator('#txtComplemento').fill(address.complemento);
+  if (address.uf !== null) await page.locator('#ddlUF').selectOption(address.uf);
+
+  return address;
 }
 
 module.exports = {
@@ -55,5 +74,5 @@ module.exports = {
   addFirstProduct,
   openCart,
   openAddressStep,
-  deferUntilDecision,
+  fillAddress,
 };

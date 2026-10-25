@@ -1,5 +1,5 @@
 const { test, expect } = require('@playwright/test');
-const { requireIsolatedTarget, deferUntilDecision } = require('../support/menu-online');
+const { requireIsolatedTarget } = require('../support/menu-online');
 
 test.beforeEach(() => requireIsolatedTarget(test));
 
@@ -27,8 +27,29 @@ test('CT-007: abre e fecha a navegação mobile', async ({ page }) => {
   await expect(page).toHaveURL(/#cardapio$/);
 });
 
-test('CT-008: compara o conteúdo institucional com a referência aprovada', async ({ page }) => {
-  deferUntilDecision(test, 'a referência aprovada de textos, imagens e destinos institucionais ainda não foi fornecida.');
+test('CT-008: valida a estrutura e o conteúdo base das seções institucionais', async ({ page }) => {
+  await page.goto('/');
+
+  const sections = [
+    { id: 'servicos', label: 'Serviços' },
+    { id: 'cardapio', label: 'Cardápio' },
+    { id: 'depoimentos', label: 'Depoimentos' },
+    { id: 'reservas', label: 'Reservas' },
+  ];
+
+  for (const section of sections) {
+    const target = page.locator(`#${section.id}`);
+    await expect(target).toHaveCount(1);
+    await expect(page.locator(`#navbarNavDropdown a[href="#${section.id}"]`)).toHaveCount(1);
+
+    const content = await target.evaluate((element) => ({
+      heading: element.querySelector('h1, h2, h3, h4, h5, h6')?.textContent.trim() || '',
+      text: element.textContent.trim(),
+    }));
+
+    expect(content.heading, `${section.label} precisa ter um título`).not.toBe('');
+    expect(content.text, `${section.label} precisa ter conteúdo`).not.toBe('');
+  }
 });
 
 test('CT-009 [regression]: troca entre categorias e exibe os cards iniciais', async ({ page }) => {

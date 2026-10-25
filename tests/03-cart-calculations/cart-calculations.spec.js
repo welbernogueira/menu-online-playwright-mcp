@@ -1,5 +1,5 @@
 const { test, expect } = require('@playwright/test');
-const { requireIsolatedTarget, addFirstProduct, openCart, deferUntilDecision } = require('../support/menu-online');
+const { requireIsolatedTarget, addFirstProduct, openCart } = require('../support/menu-online');
 
 test.beforeEach(() => requireIsolatedTarget(test));
 
@@ -35,6 +35,29 @@ test('CT-016 [regression]: altera quantidades e remove o último item', async ({
   await expect(page.locator('.badge-total-carrinho').first()).toHaveText('0');
 });
 
-test('CT-017: confere subtotal, entrega e total conforme regra aprovada', async ({ page }) => {
-  deferUntilDecision(test, 'a taxa e a regra de cálculo da entrega ainda não foram confirmadas (pergunta 6 de perguntas-pendentes.md).');
+function moneyToCents(value) {
+  const normalized = value.replace(/[^\d,.-]/g, '').replace(/\./g, '').replace(',', '.');
+  return Math.round(Number(normalized) * 100);
+}
+
+test('CT-017: calcula subtotal, taxa fixa e total conforme a linha de base de QA', async ({ page }) => {
+  await page.goto('/');
+  const card = await addFirstProduct(page, 2);
+  const cardId = await card.getAttribute('id');
+  const unitPrice = moneyToCents(await card.locator('.price-produto').innerText());
+
+  await addFirstProduct(page, 1);
+  await openCart(page);
+
+  const cartRow = page.locator('#itensCarrinho .item-carrinho').first();
+  await expect(cartRow).toBeVisible();
+  await expect(page.locator(`[id="qntd-carrinho-${cardId}"]`)).toHaveText('3');
+
+  const subtotal = moneyToCents(await page.locator('#lblSubtotal').innerText());
+  const delivery = moneyToCents(await page.locator('#lblEntrega').innerText());
+  const total = moneyToCents(await page.locator('#lblValorTotal').innerText());
+
+  expect(subtotal).toBe(unitPrice * 3);
+  expect(delivery).toBe(500);
+  expect(total).toBe(subtotal + delivery);
 });

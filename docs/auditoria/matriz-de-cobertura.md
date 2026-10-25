@@ -49,6 +49,6 @@ Esse percentual não representa testes implementados, executados, cobertura de l
 
 
 
-## Execução automatizada (2026-10-22-full-suite-local-05)
+## Execução automatizada (full-suite-local-20261024T231124284Z)
 
-Em 22/10/2026, a suíte local descobriu CT-001 a CT-036: 19 passaram, 0 falharam e 17 permaneceram PENDENTE por critérios de aceite não aprovados. A matriz cobre o estado de execução em [docs/testes/cenarios-complementares.md](../testes/cenarios-complementares.md); os artefatos rastreáveis estão em [report.html](../../qa/reports/2026-10-22-full-suite-local-05/report.html) e [report.json](../../qa/reports/2026-10-22-full-suite-local-05/report.json) e [report.xlsx](../../qa/reports/2026-10-22-full-suite-local-05/report.xlsx). Isso não representa validação da versão publicada nem altera o status de confirmação das regras de negócio.
+Em 24/10/2026, a suíte local descobriu e executou 36 cenários: 27 passaram, 9 falharam e 0 ficaram pendentes. A linha de base automatizável está em `docs/testes/criterios-padrao-execucao.md`. CTs reprovados: CT-011, CT-019, CT-020, CT-022, CT-029, CT-030, CT-031, CT-032, CT-034. Resultados e evidências: [report.html](../../qa/reports/full-suite-local-20261024T231124284Z/report.html), [report.json](../../qa/reports/full-suite-local-20261024T231124284Z/report.json), [report.xlsx](../../qa/reports/full-suite-local-20261024T231124284Z/report.xlsx). A execução local não valida a versão publicada nem encerra decisões de negócio.

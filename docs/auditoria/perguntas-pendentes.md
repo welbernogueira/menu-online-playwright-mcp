@@ -2,6 +2,11 @@
 
 As perguntas abaixo evitam transformar comportamentos atuais do código em regras de negócio presumidas. A referência ao código explica a origem da dúvida, não valida que o comportamento seja o desejado.
 
+
+## Linha de base de QA para automação
+
+As decisões pendentes abaixo continuam sem resposta do produto. Para permitir a execução das suítes, os CTs relacionados usam critérios provisórios de regressão documentados em [critérios padrão de execução](../testes/criterios-padrao-execucao.md). Essa definição não encerra nem altera as perguntas comerciais, operacionais ou de conteúdo. A execução local de 24/10/2026 teve 9 divergências da linha de base, detalhadas no [relatório de evidências](../../qa/reports/full-suite-local-20261024T231124284Z/report.html).
+
 ## Pedido, endereço e carrinho
 
 1. **UF é obrigatória?** O formulário oferece placeholder “...” com valor -1, e esse valor passa pela validação atual; o site avançou ao resumo com UF não selecionada. O esperado é bloquear e pedir seleção de uma UF válida?
@@ -43,7 +48,6 @@ As perguntas abaixo evitam transformar comportamentos atuais do código em regra
 28. **Qual ambiente deve ser o destino padrão dos testes automatizados?** playwright.config.js usa produção quando BASE_URL está ausente. Definir local/preview e os controles necessários para impedir operações externas.
 29. **Há CI, configuração de deploy ou requisitos operacionais em outro repositório/sistema?** Não foram encontrados na árvore do projeto de QA; confirmar proprietário e processo oficial.
 
-## Perguntas bloqueantes para a próxima etapa
+## Decisões de produto ainda abertas
 
-Para escrever testes assertivos de checkout, as decisões mínimas são: UF obrigatória, formato de CEP, campos obrigatórios, taxa de entrega, persistência, política de ViaCEP e limite de integração com WhatsApp. Para acessibilidade, compatibilidade e desempenho, definir padrões e ambientes. Sem essas respostas, os cenários podem ser criados como observações exploratórias, mas não como critérios de aprovação de produto.
-
+As perguntas desta página continuam aguardando confirmação do responsável de produto. A linha de base de QA permite executar os testes automatizados e reportar divergências enquanto essas decisões não chegam; ela não converte os valores ou o comportamento atual do código em regra comercial aprovada.

@@ -1,8 +1,11 @@
 {
   "scripts": {
-    "test": "playwright test",
-    "test:headed": "playwright test --headed",
-    "test:report": "playwright show-report qa/reports/latest/playwright-report"
+    "test": "node qa/scripts/run-suite.cjs",
+    "test:headed": "node qa/scripts/run-suite.cjs --headed",
+    "test:report": "node qa/scripts/show-latest-report.cjs",
+    "qa:report": "node qa/scripts/build-run-report.cjs",
+    "qa:jira:prepare": "node qa/scripts/prepare-jira-publication.cjs",
+    "test:qa:jira-table": "node --test qa/scripts/tests/prepare-jira-publication.test.cjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.64.1"

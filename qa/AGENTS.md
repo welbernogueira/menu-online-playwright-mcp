@@ -2,7 +2,7 @@
 
 ## Objetivo
 
-Executar testes funcionais do Front-end do projeto Menu On-Line com Playwright MCP, utilizando a auditoria funcional como referência para explorar a aplicação, criar cenários, executar testes automatizados e produzir evidências rastreáveis.
+Explorar o front-end do Menu On-Line e capturar evidências visuais com Playwright MCP; implementar e executar suítes automatizadas pelo Playwright Test CLI, usando a auditoria funcional como referência.
 
 ## Contexto
 
@@ -16,7 +16,7 @@ Executar testes funcionais do Front-end do projeto Menu On-Line com Playwright M
   - `matriz-de-cobertura.md`
   - `plano-de-suites.md`
   - `perguntas-pendentes.md`
-- Utilize o Playwright MCP para explorar a interface, observar comportamentos reais e executar os testes quando autorizado.
+- Utilize o Playwright MCP para explorar a interface e observar comportamentos reais. Execute suítes automatizadas pelo CLI após autorização.
 - Os cinco testes iniciais foram criados para validar o funcionamento do MCP. Preserve-os e não os considere representativos da cobertura completa da aplicação.
 - A auditoria identificou 19 áreas funcionais e propôs 34 cenários. Esses números representam o planejamento, não a quantidade de testes implementados ou aprovados.
 - A aplicação publicada já recebeu correções relacionadas aos caminhos das fontes, à solicitação inválida de imagem e ao fundo da seção de depoimentos. Confirme o estado atual antes de utilizar os registros antigos de bugs como evidência de falhas presentes.
@@ -93,6 +93,10 @@ Quando o comportamento esperado não estiver especificado:
 4. Solicite confirmação antes de estabelecer uma assertion funcional definitiva.
 5. Não classifique uma hipótese como requisito aprovado.
 
+### Linha de base de execução autorizada
+
+O responsável do projeto autorizou uma linha de base de QA para liberar os cenários que estavam pendentes na suíte completa. Consulte `docs/testes/criterios-padrao-execucao.md` antes de implementar ou executar esses casos. Os critérios ali definidos podem ser usados como oráculo de regressão desta suíte, mas devem continuar identificados como linha de base de QA, sem serem apresentados como políticas comerciais ou requisitos de produto formalmente aprovados. Não reabra como `test.fixme` os casos cobertos pelo documento; registre divergências como resultados de teste e mantenha explícitas as limitações indicadas.
+
 ## Critérios para implementação
 
 Cada cenário aprovado para automação deve conter:
@@ -127,7 +131,44 @@ Antes de executar:
 5. Confirme que os dados e o ambiente são adequados para o teste.
 6. Registre os comandos e as configurações utilizados.
 
-Utilize o Playwright MCP para explorar a aplicação e executar os testes de acordo com as ferramentas disponíveis e com a configuração existente.
+Utilize o Playwright MCP para exploração e captura das evidências visuais. A execução da suíte Node/Playwright ocorre pelo Playwright Test CLI (`npm test`), pois o MCP de navegador não oferece um runner para os arquivos `*.spec.js`.
+
+## Publicação de resultados no Jira
+
+Quando o usuário solicitar explicitamente a execução e publicação dos resultados em uma issue Jira, siga [`JIRA-INTEGRATION.md`](JIRA-INTEGRATION.md). Use a configuração do Atlassian MCP v2 em `.codex/config.toml`, valide a issue antes da suíte e confirme cada operação pelo retorno do MCP.
+
+Na publicação:
+
+- `report.xlsx` é a fonte exclusiva das linhas e valores da tabela Jira. Não anexe o XLSX, não crie link para baixá-lo, não resuma nem omita suas linhas ou colunas e não altere seus valores durante a conversão.
+- Se um XLSX já existir na issue por uma tentativa anterior, não o envie novamente nem o apague automaticamente. Registre-o como remanescente; remover um anexo existente requer autorização explícita.
+- Preserve exatamente as 11 colunas e a ordem definidas em `qa/standards/REGRAS-TEMPLATE-BASE.MD`; não acrescente uma coluna separada de ID.
+- Forme uma tabela visual no comentário com `contentFormat: "html"` e a estrutura HTML suportada pelo Atlassian MCP: `<table><thead><tr><th>…</th></tr></thead><tbody><tr><td>…</td></tr></tbody></table>`. O Jira converte essa estrutura em nós ADF `table`, `tableRow`, `tableHeader` e `tableCell`. Não use Markdown com barras verticais, texto simples ou parágrafos como substitutos da tabela.
+- Escape caracteres especiais para HTML e preserve quebras de linha com `<br>`. Valide que a leitura de volta do HTML mantém todos os cabeçalhos, linhas, colunas e valores da planilha. O comando `npm run qa:jira:prepare -- --preview-table --execution=<executionId>` cria uma prévia local e não acessa o Jira; `reportMatchesWorkbook` deve ser verdadeiro antes de publicar.
+- Teste a conversão do preparador com `npm run test:qa:jira-table` antes de reutilizá-la. Se a tabela não couber em um comentário, divida em blocos com o cabeçalho oficial repetido e sem omitir células.
+- Antes de preparar a publicação, valide que as linhas e os vereditos do XLSX correspondem a todos os cenários de `report.json`. Se houver divergência, regenere/corrija a planilha pela rotina existente; não complete valores durante a conversão.
+- Para cada linha com screenshot, associe a imagem pelo ID do cenário, envie a imagem real e obtenha o `fileId` e a `collection` retornados pelo Atlassian MCP. Não associe imagens pela ordem dos arquivos.
+- Para imagens posicionadas dentro da célula `Evidências`, use o formato HTML de comentário e a sintaxe de mídia indicada por `getContentFormatGuide` para `addOrEditJiraIssueComment`. Não presuma que Markdown, HTML genérico, caminho local ou URL de anexo renderize a imagem.
+- O upload de mídia inline usa a fase 1 de `uploadAttachmentToJiraIssue` e os identificadores retornados no nó HTML da linha correspondente. Não execute a fase 2 nem use `inlineFileId` quando a imagem já estiver embutida no corpo, pois isso pode criar anexo duplicado ou posicioná-lo fora da tabela.
+- Só use link clicável na coluna `Evidências` quando a renderização inline não for suportada; registre essa limitação e associe o link ao anexo correto. Nunca apresente uma descrição ou nome de arquivo como substituto definitivo de uma imagem disponível.
+- No fallback por link, anexe standalone, releia os metadados oficiais do anexo e use a URL `content` estável retornada pelo Jira, sem construir uma URL nem publicar links temporários assinados.
+- Se a tabela exceder o limite de um comentário, divida-a em comentários HTML numerados, repita em cada bloco o cabeçalho completo das 11 colunas e não elimine linhas. Use os marcadores de idempotência do preparador para evitar duplicação.
+- Consulte os comentários existentes antes de escrever. Não publique outro comentário para um marcador que já exista e não edite/apague comentários existentes sem autorização explícita do usuário; interrompa a publicação e relate o conflito.
+- Preserve UTF-8 de ponta a ponta. Antes de passar um bloco HTML acentuado ao MCP, use `npm --silent run qa:jira:prepare -- --execution=<executionId> --comment-base64=comment-XX-of-YY.html`; transfira o Base64 ASCII e decodifique estritamente como UTF-8 em memória. Não envie o texto por stdout PowerShell com codificação padrão. O preparador deve rejeitar mojibake e U+FFFD antes da escrita.
+- Publique um bloco por vez. Antes de cada bloco, consulte o marcador `executionId:table:<n>`; depois da escrita, releia o comentário e confirme conteúdo UTF-8, 11 cabeçalhos, linhas e imagens antes de avançar. Em resposta incerta, consulte o Jira antes de qualquer retry; não repita se o marcador já estiver presente.
+- Ao retomar publicação parcial, reconcilie os blocos e screenshots por marcador e identificador `CT-xxx`, preserve blocos/anexos já confirmados e não infira mapeamentos pela ordem dos arquivos. Declare conclusão somente depois de confirmar os 36 (ou a quantidade real da execução) cenários e mídias no Jira.
+- `npm run test:qa:jira-table` verifica caracteres portugueses e Base64 UTF-8, detecção de corrupção, blocos completos sem duplicação, mapeamento de mídia por cenário e prevenção de retry duplicado após leitura de confirmação.
+- Confirme no Jira cada comentário, a presença dos anexos, os nós de imagem no comentário e a correspondência entre cenário e evidência. Só declare a exibição inline verificada quando a leitura do comentário ou a inspeção visual confirmar a imagem; caso contrário, registre a limitação.
+
+Não transicione a issue nem crie bugs. Sem autenticação ou ferramenta Jira disponível, conclua as etapas locais e informe que a publicação ficou bloqueada; nunca simule sucesso.
+
+### Execução local padrão
+
+- `npm test` executa todos os arquivos `tests/**/*.spec.js` na cópia local de `app/`; a configuração inicia e encerra um servidor estático em `127.0.0.1:8765`.
+- A configuração bloqueia o host conhecido de produção. Um preview só pode ser alvo quando `BASE_URL` for informado explicitamente.
+- Cada execução usa uma pasta exclusiva em `qa/reports/` e preserva `raw.json`, o relatório HTML nativo, screenshots, traces de falha, `report.json`, `report.html`, `report.xlsx` e cards HTML.
+- O código de saída continua indicando falhas dos testes. O runner ainda finaliza e salva os relatórios quando uma ou mais assertions falham.
+- Para abrir o HTML nativo mais recente, use `npm run test:report`.
+- Para capturar JPEGs conforme `qa/standards/EVIDENCE-RULES.MD`, sirva a execução com `node qa/scripts/serve-report.cjs <executionId>`, renderize cada card via Playwright MCP em `http://127.0.0.1:8766/evidence/CT-xxx.html`, capture a página completa em `qa/reports/<executionId>/evidence/CT-xxx.jpg` e execute `npm run qa:report -- <executionId>` para sincronizar links, relatório e planilha.
 
 Não invente nomes de ferramentas, capacidades do MCP, resultados ou arquivos de saída. Se determinada operação não estiver disponível, informe a limitação e proponha uma alternativa compatível com o ambiente existente.
 

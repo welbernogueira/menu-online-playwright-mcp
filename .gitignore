@@ -1,2 +1,4 @@
 node_modules/
 qa/reports/
+/.playwright-mcp/
+/debug.log

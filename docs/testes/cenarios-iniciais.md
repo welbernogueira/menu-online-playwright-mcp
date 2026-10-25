@@ -18,7 +18,7 @@ tests/
 
 **Estado da implementação:** CT-001 a CT-005 estão automatizados em Playwright Test. BUG-003 foi corrigido no código local; a versão publicada ainda não contém a correção.
 
-**Estado da execução:** registrar abaixo somente resultados de execuções efetivamente realizadas. A suíte usa Chromium e, por padrão, `https://menu-online-project.vercel.app/`; `BASE_URL` pode substituir o destino. CT-001 e CT-005 não interagem com o carrinho nem concluem pedidos.
+**Estado da execução:** última suíte completa full-suite-local-20261024T231124284Z, com alvo http://127.0.0.1:8765/ e Chromium. Os resultados dos CTs iniciais estão na tabela mais recente.
 
 **Evidências da suíte:** o relatório HTML é produzido em `qa/reports/latest/playwright-report/`; screenshots e traces de falhas são salvos em `qa/reports/latest/test-results/`.
 
@@ -34,7 +34,19 @@ tests/
 
 **Linha de base e defeitos:** `tests/support/known-issues.js` identifica as três URLs da linha de base histórica para diagnóstico. CT-004 classifica separadamente 404 históricos e novos, e reprova ambos; assim, a classificação não isenta uma regressão de um recurso já corrigido. A execução local de 19/10 não encontrou 404.
 
-## Execução completa em 22/10/2026
+## Execução completa mais recente — 24/10/2026
+
+| Cenário | Veredito | Evidência |
+|---|---|---|
+| CT-001 | PASSOU | [Card HTML](../../qa/reports/full-suite-local-20261024T231124284Z/evidence/CT-001.html) · [JPEG](../../qa/reports/full-suite-local-20261024T231124284Z/evidence/CT-001.jpg) |
+| CT-002 | PASSOU | [Card HTML](../../qa/reports/full-suite-local-20261024T231124284Z/evidence/CT-002.html) · [JPEG](../../qa/reports/full-suite-local-20261024T231124284Z/evidence/CT-002.jpg) |
+| CT-003 | PASSOU | [Card HTML](../../qa/reports/full-suite-local-20261024T231124284Z/evidence/CT-003.html) · [JPEG](../../qa/reports/full-suite-local-20261024T231124284Z/evidence/CT-003.jpg) |
+| CT-004 | PASSOU | [Card HTML](../../qa/reports/full-suite-local-20261024T231124284Z/evidence/CT-004.html) · [JPEG](../../qa/reports/full-suite-local-20261024T231124284Z/evidence/CT-004.jpg) |
+| CT-005 | PASSOU | [Card HTML](../../qa/reports/full-suite-local-20261024T231124284Z/evidence/CT-005.html) · [JPEG](../../qa/reports/full-suite-local-20261024T231124284Z/evidence/CT-005.jpg) |
+
+A execução completa teve 36 cenários: 27 passaram, 9 falharam e 0 ficaram pendentes. Consulte o [relatório geral](../../qa/reports/full-suite-local-20261024T231124284Z/report.html). A execução local não valida produção.
+
+## Execução completa anterior em 22/10/2026
 
 | Cenário | Veredito | Evidência |
 |---|---|---|
